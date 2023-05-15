@@ -67,6 +67,7 @@ endp GetNumbers
 proc CheckInputOnAl           ;rn here
     push bp 
     mov bp,sp     
+    push dx
     
     strt:   
     
@@ -89,14 +90,9 @@ proc CheckInputOnAl           ;rn here
     jmp strt 
     
     finish:
-                        
+     
+    pop dx                   
     pop bp               
 endp CheckInputOnAl  
-
-proc GetNumbersValue
-    push bp
-    mov bp,sp
-       
-    pop bp    
-endp GetNumbersValue    
+  
 END  
