@@ -1,3 +1,4 @@
+; version 101
 .MODEL small
 .STACK 100h
 .DATA        
@@ -28,13 +29,10 @@ exit:
     int 21h               
     
 proc GetNumbers    ;gets the numbers from the user 
-    push bp 
+    pusha
     mov bp,sp
-    push bx
-    push cx 
-    push dx
-    push ax
- 
+    
+     
     mov cl,counter    
     xor ch,ch
     xor bx,bx
@@ -57,11 +55,8 @@ proc GetNumbers    ;gets the numbers from the user
     je getNumbersLoop  
     jmp getNumberLoop
          
-    pop ax        
-    pop dx
-    pop cx   
-    pop bx
-    pop bp 
+    popa
+   
 endp GetNumbers     
 
 proc CheckInputOnAl           ;rn here
@@ -92,7 +87,8 @@ proc CheckInputOnAl           ;rn here
     finish:
      
     pop dx                   
-    pop bp               
+    pop bp 
+    ret              
 endp CheckInputOnAl  
   
 END  
