@@ -59,7 +59,7 @@ proc GetNumbers    ;gets the numbers from the user
    
 endp GetNumbers     
 
-proc CheckInputOnAl           ;rn here
+proc CheckInputOnAl           
     push bp 
     mov bp,sp     
     push dx
