@@ -62,9 +62,9 @@ proc GetNumbers    ;gets the numbers from the user
     cmp al,','         ;checks if the user has finished inputing the number
     je getNumbersLoop  
     jmp getNumberLoop   
-    call GetNumbersTrueValue
      
-    fnsh:     
+    fnsh:
+    call GetNumbersTrueValue     
     popa
     ret
 endp GetNumbers     
@@ -102,47 +102,54 @@ proc CheckInputOnAl
 endp CheckInputOnAl  
 
 proc GetNumbersTrueValue
-    pusha
-    mov bp,sp                       
-    
-    xor si,si
-    xor cx,cx   
-    mov cl,counter            
-    xor bx,bx      
-    xor ax,ax
-    mov al,1h 
-    xor di,di
-    mov dx,10d  
-    
-    convertCharNumToTrueNumLoop:
-    mov di,bx 
-    dec di   
-      
-    getNumberOfDigits:    
-    
-    cmp arrayOgNums[bx],','
-    je convCharToNum
-    mul dx
-    inc bx
-    jmp getNumberOfDigits
-    
-    convCharToNum:   
-    inc di    
-    push ax
-    sub arrayOgNums[di],'0'       
-    mul arrayOgNums[di]
-    add arrayNumsValue[si],ax
-    pop ax
-    div dx        
-    add arrayOgNums[di],'0'
-    cmp arrayOgNums[di+1],','
-    jne convCharToNum
+    pusha 
+    mov bp,sp
      
-    inc si 
+    xor bx,bx 
+    xor cx,cx
+    mov cl,counter 
+    mov dx,10d
+    mov al,1d
+    xor ah,ah
+    xor si,si
+    xor di,di
+    
+    mainConvertLoop:
+    
+    getNumberOfChars:
+    push cx
+    cmp arrayOgNums[bx],','
+    je ConvertToValue   
+    mul dx
+    mov cx,ax
+    xor ax,ax
+    mov ah,1d
     inc bx
-    loop convertCharNumToTrueNumLoop                            
-                              
-    popa      
-    ret    
+    jmp getNumberOfChars 
+    
+    ConvertToValue:
+    cmp di,bx 
+    je fn 
+    mov al,arrayOgNums[di]  
+    sub al,'0'
+    mul cx
+    add arrayNumsValue[si],ax
+    mov ax,cx
+    div dx
+    mov cx,ax
+    xor ax,ax
+    jmp ConvertToValue
+
+    jmp ConvertToValue
+    
+    fn:
+    pop cx 
+    inc bx 
+    inc si
+    mov di,bx
+     
+    loop mainConvertLoop        
+         
+    popa    
 endp GetNumbersTrueValue  
 END  
