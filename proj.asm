@@ -122,7 +122,7 @@ proc GetNumbersTrueValue
     je ConvertToValue   
     mul dx
     mov cx,ax
-    xor ax,ax
+    xor ax,ax                                                                                        
     mov ah,1d
     inc bx
     jmp getNumberOfChars 
@@ -130,7 +130,7 @@ proc GetNumbersTrueValue
     ConvertToValue:
     cmp di,bx 
     je fn 
-    mov al,arrayOgNums[di]  
+    mov al,arrayOgNums[di]                                      
     sub al,'0'
     mul cx
     add arrayNumsValue[si],ax
