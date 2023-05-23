@@ -1,155 +1,267 @@
-; version 102
+; version 1.00
 .MODEL small
 .STACK 100h
 .DATA        
-arrayOgNums db 100dup(0)
-arrayNumsValue dw 100dup(0)
-msg db 13,10,'Enter amount of numbers: ','$'        
-msg0 db 13,10,'Enter number (enter "," to finish)','$' 
-msg1 db 13,10,'Enter next digit: ','$'     
-msg2 db 13,10,'Wrong input enter new: ','$'
-counter db 0
-.CODE
-    mov ax,@data
-    mov ds,ax    
+msg0 db 13,10,'Enter amount of numbers. ','$'   
+array dw 100 dup (0) 
+result db 16 dup('x'), 'b'
+msg1 db 13,10, "supported values from -32768 to 65535",13,10
+     db "enter the number: $" 
+counter dw 0
+crlf db 13,10,'$',13,10                
+make_minus db ? ; used as a flag.
+ten dw 10 ; used as multiplier. 
+msg3 db 13,10,"_______________________________________________________",13,10   
+     db       "| This program does the following:                    |",13,10         
+     db       "|                                                     |",13,10
+     db       "| To insert the numbers press: 1                      |",13,10
+     db       "| To get the lowest number press: 2                   |",13,10
+     db       "| To get the highest number press: 3                  |",13,10
+     db       "| To calculate the average of all the numbers press: 4|",13,10
+     db       "| To end program press: 5                             |",13,10 
+     db       "|_____________________________________________________|",13,10 
+     db       13,10,'$'
+msg4 db 13,10,'Error in input enter again: ','$'       
+.CODE 
+strt:   
+
+   mov ax,@data
+   mov ds,ax    
     
-    lea dx,msg       
-    mov ah,09h
-    int 21h 
-    
-    mov ah,01
-    int 21h
-    
-    sub al,'0'
-    mov counter,al  
-    call GetNumbers
-        
+   call Menu   
+   
 exit:
     mov ax,4c00h
-    int 21h               
-    
-proc GetNumbers    ;gets the numbers from the user 
-    pusha
-    mov bp,sp
-     
-    mov cl,counter    
-    xor ch,ch
-    xor bx,bx
-    
-    getNumbersLoop:  
-    
-    cmp cx,0
-    jbe fnsh 
-    dec cx
-    
-    mov ah,09h           
-    lea dx, msg0           
-    int 21h 
-    
-    getNumberLoop:
-    
-    lea dx,msg1
-    mov ah,09
-    int 21h
-    
-    mov ah,1
-    int 21h
-       
-    call CheckInputOnAl ;call a procedure that checks if the input is correct
-    
-    mov arrayOgNums[bx],al                                                 
-    inc bx     
-    cmp al,','         ;checks if the user has finished inputing the number
-    je getNumbersLoop  
-    jmp getNumberLoop   
-     
-    fnsh:
-    call GetNumbersTrueValue     
-    popa
-    ret
-endp GetNumbers     
+    int 21h       
+proc Menu
+        pusha
+        mov bp,sp
+        
+startOfMenu:
+           
+        lea dx,msg3              
+        mov ah,09h
+        int 21h
+        
+getNumberLabel:
+        
+        mov ah,1
+        int 21h 
+        
+        cmp al,'1'
+        je press1
+        
+        cmp al,'2'  
+        je press2
+        
+        cmp al,'3' 
+        je press3
 
-proc CheckInputOnAl           
-    push bp 
-    mov bp,sp     
-    push dx
-    
-    strt:   
-    
-    cmp al,','
-    je finish
-    cmp al,'0'
-    jl error
-    cmp al,'9'
-    jg error
-    jmp finish
-    
-    error:
+        cmp al,'4' 
+        je press4
+        
+        cmp al,'5' 
+        je press5
+                 
+        lea dx, msg4                
+        mov ah, 09h
+        int 21h
+        jmp getNumberLabel
+                
+press1:
+        
+        call SetArray 
+        jmp startOfMenu        
+        
+press2: 
+        
+        
+        jmp startOfMenu  
+        
+press3:  
 
-    lea dx,msg2
-    mov ah,09
-    int 21h 
-    
-    mov ah,01
-    int 21h
-    jmp strt 
-    
-    finish:
-     
-    pop dx                   
-    pop bp 
-    ret              
-endp CheckInputOnAl  
 
-proc GetNumbersTrueValue
-    pusha 
-    mov bp,sp
-     
-    xor bx,bx 
-    xor cx,cx
-    mov cl,counter 
-    mov dx,10d
-    mov al,1d
-    xor ah,ah
-    xor si,si
-    xor di,di
+        jmp startOfMenu 
+        
+press4:
+        
+        
+        jmp startOfMenu  
+        
+press5:   
+        popa
+        ret    
+endp Menu     
+   
+proc SetArray  ;sets the array with values from the user  
+        pusha
+        mov bp,sp
+        
+        mov dx,offset msg0
+        mov ah,09h
+        int 21h
     
-    mainConvertLoop:
-    
-    getNumberOfChars:
-    push cx
-    cmp arrayOgNums[bx],','
-    je ConvertToValue   
-    mul dx
-    mov cx,ax
-    xor ax,ax                                                                                        
-    mov ah,1d
-    inc bx
-    jmp getNumberOfChars 
-    
-    ConvertToValue:
-    cmp di,bx 
-    je fn 
-    mov al,arrayOgNums[di]                                      
-    sub al,'0'
-    mul cx
-    add arrayNumsValue[si],ax
-    mov ax,cx
-    div dx
-    mov cx,ax
-    xor ax,ax
-    jmp ConvertToValue
-
-    jmp ConvertToValue
-    
-    fn:
-    pop cx 
-    inc bx 
-    inc si
-    mov di,bx
-     
-    loop mainConvertLoop        
+        call GetNumber
+        xor bx,bx  
+          
+LoopGetNumbers:
+        push cx
+        
+        mov ah,09h
+        lea dx,crlf
+        int 21h 
          
-    popa    
-endp GetNumbersTrueValue  
-END  
+        call GetNumber
+        mov array[bx],cx      
+         
+        inc bx
+        inc bx 
+        pop cx                 
+loop LoopGetNumbers
+           
+        popa  
+        ret
+endp SetArray
+
+proc GetNumber
+        push bp
+        mov bp,sp
+        push ax
+        push dx
+
+; print the message1:
+        mov dx, offset msg1
+        mov ah, 9
+        int 21h
+
+        call ScanNum ; get the number to cx.
+                
+        pop dx
+        pop ax
+        pop bp
+        ret  ;return to operating system.
+endp GetNumber
+
+; this macro prints a char in al and advances the current cursor position:
+putc    macro   char
+        push    ax
+        mov     al, char
+        mov     ah, 0eh
+        int     10h     
+        pop     ax
+endm
+
+; this procedure gets the multi-digit signed number from the keyboard,
+; and stores the result in cx register:
+proc ScanNum
+        push    dx
+        push    ax
+        push    si
+        
+        mov     cx, 0
+
+        ; reset flag:
+        mov     cs:make_minus, 0
+
+next_digit:
+
+        ; get char from keyboard
+        ; into al:
+        mov     ah, 00h
+        int     16h
+        ; and print it:
+        mov     ah, 0eh
+        int     10h
+
+        ; check for minus:
+        cmp     al, '-'
+        je      set_minus
+
+        ; check for enter key:
+        cmp     al, 13  ; carriage return?
+        jne     not_cr
+        jmp     stop_input
+not_cr:
+
+
+        cmp     al, 8                   ; 'backspace' pressed?
+        jne     backspace_checked
+        mov     dx, 0                   ; remove last digit by
+        mov     ax, cx                  ; division:
+        div     cs:ten                  ; ax = dx:ax / 10 (dx-rem).
+        mov     cx, ax
+        putc    ' '                     ; clear position.
+        putc    8                       ; backspace again.
+        jmp     next_digit
+backspace_checked:
+
+
+        ; allow only digits:
+        cmp     al, '0'
+        jae     ok_ae_0
+        jmp     remove_not_digit
+ok_ae_0:        
+        cmp     al, '9'
+        jbe     ok_digit
+remove_not_digit:       
+        putc    8       ; backspace.
+        putc    ' '     ; clear last entered not digit.
+        putc    8       ; backspace again.        
+        jmp     next_digit ; wait for next input.       
+ok_digit:
+
+
+        ; multiply cx by 10 (first time the result is zero)
+        push    ax
+        mov     ax, cx
+        mul     ten                  ; dx:ax = ax*10
+        mov     cx, ax
+        pop     ax
+
+        ; check if the number is too big
+        ; (result should be 16 bits)
+        cmp     dx, 0
+        jne     too_big
+
+        ; convert from ascii code:
+        sub     al, 30h
+
+        ; add al to cx:
+        mov     ah, 0
+        mov     dx, cx      ; backup, in case the result will be too big.
+        add     cx, ax
+        jc      too_big2    ; jump if the number is too big.
+
+        jmp     next_digit
+
+set_minus:
+        mov     cs:make_minus, 1
+        jmp     next_digit
+
+too_big2:
+        mov     cx, dx      ; restore the backuped value before add.
+        mov     dx, 0       ; dx was zero before backup!
+too_big:
+        mov     ax, cx
+        div     cs:ten  ; reverse last dx:ax = ax*10, make ax = dx:ax / 10
+        mov     cx, ax
+        putc    8       ; backspace.
+        putc    ' '     ; clear last entered digit.
+        putc    8       ; backspace again.        
+        jmp     next_digit ; wait for enter/backspace.
+        
+        
+stop_input:
+        ; check flag:
+        cmp     cs:make_minus, 0
+        je      not_minus
+        neg     cx
+not_minus:
+
+        pop     si
+        pop     ax
+        pop     dx
+        ret
+endp ScanNum
+
+END
