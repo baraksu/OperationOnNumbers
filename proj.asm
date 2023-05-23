@@ -1,5 +1,5 @@
 ; version 1.01
-.MODEL large
+.MODEL small
 .STACK 100h
 .DATA        
 msg0 db 13,10,'Enter amount of numbers. ','$'   
