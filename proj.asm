@@ -1,5 +1,5 @@
-; version 1.00
-.MODEL small
+; version 1.01
+.MODEL large
 .STACK 100h
 .DATA        
 msg0 db 13,10,'Enter amount of numbers. ','$'   
@@ -12,27 +12,26 @@ crlf db 13,10,'$',13,10
 make_minus db ? ; used as a flag.
 ten dw 10 ; used as multiplier. 
 msg3 db 13,10,"_______________________________________________________",13,10   
-     db       "| This program does the following:                    |",13,10         
-     db       "|                                                     |",13,10
-     db       "| To insert the numbers press: 1                      |",13,10
-     db       "| To get the lowest number press: 2                   |",13,10
-     db       "| To get the highest number press: 3                  |",13,10
-     db       "| To calculate the average of all the numbers press: 4|",13,10
-     db       "| To end program press: 5                             |",13,10 
-     db       "|_____________________________________________________|",13,10 
+     db       "³ This program does the following:                    ³",13,10         
+     db       "³                                                     ³",13,10
+     db       "³ To insert the numbers press: 1                      ³",13,10
+     db       "³ To get the lowest number press: 2                   ³",13,10
+     db       "³ To get the highest number press: 3                  ³",13,10           
+     db       "³ To calculate the average of all the numbers press: 4³",13,10
+     db       "³ To end program press: 5                             ³",13,10 
+     db       "³_____________________________________________________³",13,10 
      db       13,10,'$'
 msg4 db 13,10,'Error in input enter again: ','$'       
 .CODE 
 strt:   
-
-   mov ax,@data
-   mov ds,ax    
+        mov ax,@data
+        mov ds,ax    
     
-   call Menu   
+        call Menu   
    
 exit:
-    mov ax,4c00h
-    int 21h       
+        mov ax,4c00h
+        int 21h       
 proc Menu
         pusha
         mov bp,sp
@@ -75,7 +74,7 @@ press1:
         
 press2: 
         
-        
+        call LowestNum
         jmp startOfMenu  
         
 press3:  
@@ -92,7 +91,38 @@ press5:
         popa
         ret    
 endp Menu     
-   
+           
+proc LowestNum  ;here
+        pusha
+        mov bp,sp
+     
+        mov cx,counter
+        xor si,si
+        xor bx,bx
+        
+checkLowestNum:
+        
+        mov ax,array[bx]
+        mov dx,array[si]
+        cmp ax,dx
+        jle set
+        jmp setEnd
+set:                      
+        mov si,bx
+                  
+setEnd:
+        
+        inc bx
+                          
+loop checkLowestNum        
+                  
+        lea dx,array[si]                 
+        mov ah,09h
+        int 21h
+                      
+        popa      
+endp LowestNum           
+           
 proc SetArray  ;sets the array with values from the user  
         pusha
         mov bp,sp
@@ -102,7 +132,8 @@ proc SetArray  ;sets the array with values from the user
         int 21h
     
         call GetNumber
-        xor bx,bx  
+        xor bx,bx 
+        mov counter,cx 
           
 LoopGetNumbers:
         push cx
@@ -153,7 +184,9 @@ endm
 
 ; this procedure gets the multi-digit signed number from the keyboard,
 ; and stores the result in cx register:
-proc ScanNum
+proc ScanNum  
+        push bp
+        mov bp,sp
         push    dx
         push    ax
         push    si
@@ -180,9 +213,9 @@ next_digit:
         ; check for enter key:
         cmp     al, 13  ; carriage return?
         jne     not_cr
-        jmp     stop_input
+        jmp     stop_input     
+        
 not_cr:
-
 
         cmp     al, 8                   ; 'backspace' pressed?
         jne     backspace_checked
@@ -191,25 +224,28 @@ not_cr:
         div     cs:ten                  ; ax = dx:ax / 10 (dx-rem).
         mov     cx, ax
         putc    ' '                     ; clear position.
-        putc    8                       ; backspace again.
+        putc    8                       ; backspace again. 
+        
         jmp     next_digit
 backspace_checked:
-
 
         ; allow only digits:
         cmp     al, '0'
         jae     ok_ae_0
-        jmp     remove_not_digit
+        jmp     remove_not_digit   
+        
 ok_ae_0:        
         cmp     al, '9'
         jbe     ok_digit
-remove_not_digit:       
+        
+remove_not_digit:  
+     
         putc    8       ; backspace.
         putc    ' '     ; clear last entered not digit.
         putc    8       ; backspace again.        
-        jmp     next_digit ; wait for next input.       
+        jmp     next_digit ; wait for next input. 
+              
 ok_digit:
-
 
         ; multiply cx by 10 (first time the result is zero)
         push    ax
@@ -234,14 +270,18 @@ ok_digit:
 
         jmp     next_digit
 
-set_minus:
+set_minus: 
+
         mov     cs:make_minus, 1
         jmp     next_digit
 
 too_big2:
+
         mov     cx, dx      ; restore the backuped value before add.
         mov     dx, 0       ; dx was zero before backup!
-too_big:
+        
+too_big:   
+
         mov     ax, cx
         div     cs:ten  ; reverse last dx:ax = ax*10, make ax = dx:ax / 10
         mov     cx, ax
@@ -252,16 +292,20 @@ too_big:
         
         
 stop_input:
+
         ; check flag:
         cmp     cs:make_minus, 0
         je      not_minus
-        neg     cx
+        neg     cx     
+        
 not_minus:
-
+     
         pop     si
         pop     ax
-        pop     dx
-        ret
+        pop     dx 
+        pop     bp
+        ret       
+        
 endp ScanNum
 
 END
