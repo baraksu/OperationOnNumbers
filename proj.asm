@@ -1,4 +1,4 @@
-; version 1.01
+; version 1.02
 .MODEL small
 .STACK 100h
 .DATA        
@@ -18,10 +18,13 @@ msg3 db 13,10,"_______________________________________________________",13,10
      db       "³ To get the lowest number press: 2                   ³",13,10
      db       "³ To get the highest number press: 3                  ³",13,10           
      db       "³ To calculate the average of all the numbers press: 4³",13,10
-     db       "³ To end program press: 5                             ³",13,10 
+     db       "³ To print all numbers press: 5                       ³",13,10 
+     db       "³ To end program press: 6                             ³",13,10
      db       "³_____________________________________________________³",13,10 
      db       13,10,'$'
-msg4 db 13,10,'Error in input enter again: ','$'       
+msg4 db 13,10,'Error in input enter again: ','$'
+msg5 db 13,10,'Lowest number: ','$' 
+msg6 db 13,10,'Highest number: ','$'       
 .CODE 
 strt:   
         mov ax,@data
@@ -61,6 +64,9 @@ getNumberLabel:
         
         cmp al,'5' 
         je press5
+         
+        cmp al,'6' 
+        je press6 
                  
         lea dx, msg4                
         mov ah, 09h
@@ -79,7 +85,7 @@ press2:
         
 press3:  
 
-
+        call HighestNum
         jmp startOfMenu 
         
 press4:
@@ -87,7 +93,12 @@ press4:
         
         jmp startOfMenu  
         
-press5:   
+press5:
+       
+       
+        jmp startOfMenu
+        
+press6:   
         popa
         ret    
 endp Menu     
@@ -105,23 +116,100 @@ checkLowestNum:
         mov ax,array[bx]
         mov dx,array[si]
         cmp ax,dx
-        jle set
+        jb set
         jmp setEnd
 set:                      
         mov si,bx
                   
 setEnd:
-        
+        inc bx
         inc bx
                           
 loop checkLowestNum        
                   
-        lea dx,array[si]                 
+        mov ax, array[si]            
+        
+        push ax
+        
+        lea dx,msg5
         mov ah,09h
-        int 21h
-                      
-        popa      
-endp LowestNum           
+        int 21h 
+        
+        pop ax
+         
+        call print_ax
+                             
+        popa 
+        ret     
+endp LowestNum
+
+proc HighestNum
+        pusha   
+        mov bp,sp
+        
+        mov cx,counter
+        xor si,si
+        xor bx,bx
+        
+checkHighestNum:
+                
+        mov ax,array[bx]
+        mov dx,array[si]
+        cmp ax,dx ;problem here if you remove the cmp it will work 
+        ja set2
+        jmp set2End
+        
+set2:
+        mov si,bx
+        
+set2End:
+        inc bx
+        inc bx
+        
+loop checkHighestNum
+        
+        mov ax,array[si]
+        
+        push ax
+        
+        lea dx,msg6
+        mov ah,09h
+        int 21h 
+        
+        pop ax
+        
+        call print_ax                                      
+               
+        popa
+        ret     
+endp HighestNum        
+
+print_ax proc
+cmp ax, 0
+jne print_ax_r
+    push ax
+    mov al, '0'
+    mov ah, 0eh
+    int 10h
+    pop ax
+    ret 
+print_ax_r:
+    pusha
+    mov dx, 0
+    cmp ax, 0
+    je pn_done
+    mov bx, 10
+    div bx    
+    call print_ax_r
+    mov ax, dx
+    add al, 30h
+    mov ah, 0eh
+    int 10h    
+    jmp pn_done
+pn_done:
+    popa  
+    ret  
+endp     
            
 proc SetArray  ;sets the array with values from the user  
         pusha
