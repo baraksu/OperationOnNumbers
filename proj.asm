@@ -1,4 +1,4 @@
-; version 1.02
+; version 104
 .MODEL small
 .STACK 100h
 .DATA        
@@ -26,7 +26,7 @@ msg4 db 13,10,'Error in input enter again: ','$'
 msg5 db 13,10,'Lowest number: ','$' 
 msg6 db 13,10,'Highest number: ','$'       
 .CODE 
-strt:   
+start:   
         mov ax,@data
         mov ds,ax    
     
@@ -155,6 +155,7 @@ checkHighestNum:
                 
         mov ax,array[bx]
         mov dx,array[si]
+        cmp ax,dx
         ;problem here if you remove the cmp it will work 
         ja set2
         jmp set2End
@@ -184,32 +185,7 @@ loop checkHighestNum
         ret     
 endp HighestNum        
 
-print_ax proc
-cmp ax, 0
-jne print_ax_r
-    push ax
-    mov al, '0'
-    mov ah, 0eh
-    int 10h
-    pop ax
-    ret 
-print_ax_r:
-    pusha
-    mov dx, 0
-    cmp ax, 0
-    je pn_done
-    mov bx, 10
-    div bx    
-    call print_ax_r
-    mov ax, dx
-    add al, 30h
-    mov ah, 0eh
-    int 10h    
-    jmp pn_done
-pn_done:
-    popa  
-    ret  
-endp     
+    
            
 proc SetArray  ;sets the array with values from the user  
         pusha
@@ -395,5 +371,32 @@ not_minus:
         ret       
         
 endp ScanNum
+  
+print_ax proc
+cmp ax, 0
+jne print_ax_r
+    push ax
+    mov al, '0'
+    mov ah, 0eh
+    int 10h
+    pop ax
+    ret 
+print_ax_r:
+    pusha
+    mov dx, 0
+    cmp ax, 0
+    je pn_done
+    mov bx, 10
+    div bx    
+    call print_ax_r
+    mov ax, dx
+    add al, 30h
+    mov ah, 0eh
+    int 10h    
+    jmp pn_done
+pn_done:
+    popa  
+    ret  
+endp print_ax
 
-END
+END start
