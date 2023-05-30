@@ -43,7 +43,7 @@ startOfMenu:
            
         lea dx,msg3              
         mov ah,09h
-        int 21h
+        int 21h                                                                                    
         
 getNumberLabel:
         
@@ -155,7 +155,7 @@ checkHighestNum:
                 
         mov ax,array[bx]
         mov dx,array[si]
-        cmp ax,dx ;problem here if you remove the cmp it will work 
+        ;problem here if you remove the cmp it will work 
         ja set2
         jmp set2End
         
