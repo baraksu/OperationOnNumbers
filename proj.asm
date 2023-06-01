@@ -4,7 +4,7 @@
 .DATA        
 msg0 db 13,10,'Enter amount of numbers. ','$'    ;this msg contains a string that asks for the amount of numbers syou want in the array
 array dw 100 dup (0)  ;this is the array variable 
-msg1 db 13,10, "supported values from 0 to 65535",13,10  ; this msg asks for a number and tells you the range of working values
+msg1 db 13,10, "supported values from 000000 to 65535",13,10  ; this msg asks for a number and tells you the range of working values
      db "enter the number: $" 
 counter dw 0   ;this variable stores the amount of numbers in the array 
 crlf db 13,10,'$',13,10  ;this variable is used to go down lines               
