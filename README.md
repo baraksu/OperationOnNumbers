@@ -103,6 +103,8 @@ the variables are:\
 * `quotient` - this is the variable that stores the quotient of the average of all the numbers in the array.
 * `remainder` - this is the variable that stores the remainder of the average of all the numbers in the array.
 * `msg3` - this is the variable that stores the entire menu of the program.
+## Possible future features
+i would like to add new operations to the program in the future, like a procedure that will print the array, or 
 
 ## Personal experience
 It was very challenging to work on this project, if I thought I knew assembly before this project then I didn't it was 
