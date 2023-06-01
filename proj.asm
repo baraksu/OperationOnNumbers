@@ -1,4 +1,4 @@
-; version 1.06 ; title before entering number, each number- Enter number (index)
+; version 1.06
 .MODEL small
 .STACK 100h
 .DATA        
@@ -17,11 +17,10 @@ msg3 db 13,10,"_______________________________________________________",13,10   
      db       "³ To get the lowest number press: 2                   ³",13,10
      db       "³ To get the highest number press: 3                  ³",13,10           
      db       "³ To calculate the average of all the numbers press: 4³",13,10
-     db       "³ To print all numbers press: 5                       ³",13,10 
-     db       "³ To end program press: 6                             ³",13,10
+     db       "³ To end program press: 5                             ³",13,10
      db       "³_____________________________________________________³",13,10 
      db       13,10,'$'
-msg4 db 13,10,'Error in input enter again: ','$'  ;if there is an error in input this msg will display
+msg4 db 13,10,'Error in input enter again: ',13,10,'$'  ;if there is an error in input this msg will display
 msg5 db 13,10,'Lowest number: ','$'  ;msg to show lowest number
 msg6 db 13,10,'Highest number: ','$' ;msg to show highest number     
 msg7 db 13,10,'The array:',13,10,'$' ;used to print the array
@@ -31,18 +30,60 @@ msg81 db 13,10,'the avg is: ','$'
 msg82 db ' with remainder: ','$' 
 remainder dw 0,'$' ;used as a place  to store the remainder when calculating the avg
 quotient dw 0,'$'  ;used as a place  to store the quotient when calculating the avg  
-sum db 0 ;used to store the sum of numbers in array
+msg91 db 13,10,' ','$';msg that shows before entering number for array
+msg92 db ' Numbers left for array',13,10,'$' ;second part of msg9
 .CODE 
 start:            ;this is the start of the code
         mov ax,@data
         mov ds,ax    
-    
+        
+        call SetArray
         call Menu ; this command calls the menu which is basically the program
    
 exit:
         mov ax,4c00h
         int 21h       
-proc Menu ;this procedure is the programs menu 
+
+proc HighestNum ; a procedure that prints that highest number  ;does not get anything and does not return anything
+        pusha
+        mov bp,sp
+     
+        mov cx,counter
+        xor si,si
+        xor bx,bx
+        
+checkHighestNum:
+        
+        mov ax,array[bx]
+        mov dx,array[si]
+        cmp ax,dx
+        ja set2
+        jmp set2End
+set2:                      
+        mov si,bx
+                  
+set2End:
+        add bx,2h
+                          
+loop checkHighestNum        
+                  
+        mov ax, array[si]            
+        
+        push ax
+        
+        lea dx,msg6
+        mov ah,09h
+        int 21h 
+        
+        pop ax
+         
+        call print_ax
+                             
+        popa 
+        ret 
+endp HighestNum 
+
+proc Menu ;this procedure is the programs menu ;does not get anything and does not return anything
         pusha
         mov bp,sp
         
@@ -68,12 +109,9 @@ getNumberLabel:    ;here we check what number the user inputed to know what proc
 
         cmp al,'4' ;this will calculate the avg of the numbers in the array
         je press4
-        
-        cmp al,'5' ;this will print all the numbers in the array
-        je press5
          
-        cmp al,'6' ;this will end the program
-        je press6 
+        cmp al,'5' ;this will end the program
+        je press5 
                  
         lea dx, msg4                
         mov ah, 09h
@@ -81,34 +119,64 @@ getNumberLabel:    ;here we check what number the user inputed to know what proc
         jmp getNumberLabel
                 
 press1:
-        
         call SetArray 
         jmp startOfMenu        
-        
 press2: 
         call LowestNum
-        jmp startOfMenu  
-        
-press3:  
-        
+        jmp startOfMenu         
+press3:          
         call HighestNum 
         jmp startOfMenu 
         
 press4:
         call GetArrAvg
-        jmp startOfMenu  
-        
-press5:  
-        call PrintArray
-        jmp startOfMenu 
-        
-        
-press6:   
+        jmp startOfMenu   
+press5:     
         popa
         ret     
-endp Menu     
+endp Menu 
+
+proc LowestNum ; a procedure that prints the lowest number ;does not get anything and does not return anything
+        pusha
+        mov bp,sp
+     
+        mov cx,counter
+        xor si,si
+        xor bx,bx
+        
+checkLowestNum:
+        
+        mov ax,array[bx]
+        mov dx,array[si]
+        cmp ax,dx
+        jb set
+        jmp setEnd
+set:                      
+        mov si,bx
+                  
+setEnd:
+        inc bx
+        inc bx
+                          
+loop checkLowestNum        
+                  
+        mov ax, array[si]            
+        
+        push ax
+        
+        lea dx,msg5
+        mov ah,09h
+        int 21h 
+        
+        pop ax
+         
+        call print_ax
+                             
+        popa 
+        ret     
+endp LowestNum            
   
-proc GetArrAvg
+proc GetArrAvg  ;this procedure prints the array's average ;does not get anything and does not return anything
         pusha 
         mov bp,sp
         
@@ -153,161 +221,49 @@ endAvg:
         
         popa 
         ret
-endp GetArrAvg     
+endp GetArrAvg  
 
-proc PrintArray ; a procedure that prints the array 
-        pusha 
-        mov bp,sp
-        
-        mov ah,09h
-        lea dx,msg7
-        int 21h
-         
-        mov dl,' '
-        mov ah,2h
-        int 21h
-         
-        xor ax,ax
-        xor bx,bx
-        xor dx,dx
-        inc dx
-        mov cx,counter 
-        jmp printArr2    
-         
-printArr:
-        
-        mov ah,09h
-        lea dx,comma
-        int 21h 
-
-        
-printArr2:
-        pop dx 
-        inc dx
-        mov ax,dx
-        call print_ax
-        push dx
-        
-        mov ah,09h
-        lea dx,TwoDotsSpace
-        int 21h
-        
-        mov ax,array[bx]
-        call print_ax
-        
-        pop dx
-        inc bx
-        inc bx
-        push dx
-        loop printArr
-        
-        popa
-        ret 
-endp PrintArray 
-           
-proc LowestNum ; a procedure that prints the lowest number 
+proc SetArray  ;sets the array with values from the user ;does not get anything and does not return anything 
         pusha
         mov bp,sp
-     
-        mov cx,counter
-        xor si,si
-        xor bx,bx
-        
-checkLowestNum:
-        
-        mov ax,array[bx]
-        mov dx,array[si]
-        cmp ax,dx
-        jb set
-        jmp setEnd
-set:                      
-        mov si,bx
-                  
-setEnd:
-        inc bx
-        inc bx
-                          
-loop checkLowestNum        
-                  
-        mov ax, array[si]            
-        
-        push ax
-        
-        lea dx,msg5
+        jmp l4
+l3:     
         mov ah,09h
-        int 21h 
-        
-        pop ax
-         
-        call print_ax
-                             
-        popa 
-        ret     
-endp LowestNum
-
-proc HighestNum ; a procedure that prints that highest number
-        pusha   
-        mov bp,sp
-        
-        mov cx,counter
-        xor si,si
-        xor bx,bx
-        
-checkHighestNum:
-                
-        mov ax,array[bx]
-        mov dx,array[si]
-        cmp ax,dx
-        ;problem here if you remove the cmp it will work 
-        ja set2
-        jmp set2End
-        
-set2:
-        mov si,bx
-        
-set2End:
-        inc bx
-        inc bx
-        
-loop checkHighestNum
-        
-        mov ax,array[si]
-        
-        push ax
-        
-        lea dx,msg6
-        mov ah,09h
-        int 21h 
-        
-        pop ax
-        
-        call print_ax                                      
-               
-        popa
-        ret     
-endp HighestNum        
-
-    
-           
-proc SetArray  ;sets the array with values from the user  
-        pusha
-        mov bp,sp
-        
+        lea dx,msg4
+        int 21h
+l4:   
         mov dx,offset msg0
         mov ah,09h
         int 21h
     
-        call ScanNum
+        call ScanNum 
+        cmp cx,0
+        je l3
         xor bx,bx 
         mov ax,cx
-        mov counter,ax 
+        mov counter,ax  
+        xor ax,ax
+        mov ax,1
+        push ax
           
 LoopGetNumbers:
         push cx
         
         mov ah,09h
         lea dx,crlf
-        int 21h 
+        int 21h
+        
+        mov ah,09h
+        lea dx,msg91
+        int 21h     
+        
+        pop ax      
+        call print_ax
+        push ax
+        
+        mov ah,09h
+        lea dx,msg92
+        int 21h
          
         call ScanNum
         mov array[bx],cx      
@@ -316,6 +272,7 @@ LoopGetNumbers:
         inc bx 
         pop cx                 
 loop LoopGetNumbers
+        pop ax
            
         popa  
         ret
