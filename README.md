@@ -59,13 +59,13 @@ Planning the project was not that hard but the execution of the plan was hard.\
 to make life easier I split the code into different parts, procedures.
 
 #### Procedures in the project
-* `Menu` - The menu of the project
-* `HighestNum` - Prints the highest number in the array
-* `LowestNum` - Prints the lowest number in the array
-* `GetArrAvg` - Prints the average of the numbers in the array
-* `SetArray` - A procedure to set the array
-* `ScanNum` - A procedure that gets a number up to 65535 and stores it in cx 
-* `print_ax` - A procedure that prints the hexadecimal value in ax in decimal form
+* `Menu` - The menu of the project.
+* `HighestNum` - Prints the highest number in the array.
+* `LowestNum` - Prints the lowest number in the array.
+* `GetArrAvg` - Prints the average of the numbers in the array.
+* `SetArray` - A procedure to set the array.
+* `ScanNum` - A procedure that gets a number up to 65535 and stores it in cx.
+* `print_ax` - A procedure that prints the hexadecimal value in ax in decimal form.
  
 I planned how the general code of each procedure should be yet still because assembly is the worst coding language in the world I still had problems.
 ## Input
@@ -108,4 +108,4 @@ the variables are:\
 It was very challenging to work on this project, if I thought I knew assembly before this project then I didn't it was 
 really tough handling all the problems with assembly and my best advice is to not touch assembly, because it is very hard 
 but if you do learn assembly and do a big project then it is very rewarding. Doing this project got me to know how the
-computer works and how just a tiny imperfection can make everything collapse.
+computer works and how just a tiny imperfection can make everything collapse. Before doing this project i hated assembley, and now i only dislike it.
