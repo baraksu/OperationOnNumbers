@@ -53,7 +53,7 @@ This is an example of finding the average of the numbers in the array.
 This is an example of ending the program.
 
 # Developing Process
-Developing this project was extremely tedious and hard but it was very rewarding at the end.\
+Developing this project was extremely tedious and hard but it was very rewarding at the end.
 
 Planning the project was not that hard but the execution of the plan was hard.\
 to make life easier I split the code into different parts, procedures.
@@ -75,7 +75,7 @@ my journey with it.\
 The most difficult part of this program, and also the part which took the most time was getting the input for the array.\
 To get a number I first thought to myself "Why not just do the program work only on numbers 0-9" but I quickly realized \
 how lame that would be, so I started writing a code that gets each char of the number 0-9 in its place in the array, \
-and then I would take the chars and add them -30h to a new array that stores the value of the numbers, but that quickly,\ 
+and then I would take the chars and add them -30h to a new array that stores the value of the numbers, but that quickly,
 turned out not to work well, so I tried thinking of a different way to get the numbers and display them.\
 \
 after some time I stumbled upon two example files in the emu8086 files.\
@@ -86,7 +86,7 @@ hexadecimal to decimal.\
 \
 The way the ScanNum procedure works (The procedure that gets a number from the user) is by getting a number and then doing\
 multiple checks. The first check is to check if you pressed enter and if you did then you exit the procedure with the\
-input number in its true value in hexadecimal stored in the register cx. The second check checks if you pressed\ 
+input number in its true value in hexadecimal stored in the register cx. The second check checks if you pressed
 backspace and if you did then it removes the last digit both from the screen and from the cx, the place the number is \
 stored, if you didn't then the code moves to store the number the way it stores the number is by multiplying the last \
 number by 10, so it would be 123 and not 6, then it adds the new number.\
@@ -97,15 +97,15 @@ ScanNum procedure.\
 ##The important variables
 To better understand the program I shall explain the important variables to you.\
 the variables are:\
-\
-* `array` - this is the variable that stores the array.\
-* `counter` - this is the variable that stores the amount of numbers in the array.\
-* `quotient` - this is the variable that stores the quotient of the average of all the numbers in the array.\
-* `remainder` - this is the variable that stores the remainder of the average of all the numbers in the array.\
-* `msg3` - this is the variable that stores the entire menu of the program.\
 
+* `array` - this is the variable that stores the array.
+* `counter` - this is the variable that stores the number of numbers in the array.
+* `quotient` - this is the variable that stores the quotient of the average of all the numbers in the array.
+* `remainder` - this is the variable that stores the remainder of the average of all the numbers in the array.
+* `msg3` - this is the variable that stores the entire menu of the program.
 
-
-
-
-
+## Personal experience
+It was very challenging to work on this project, if I thought I knew assembly before this project then I didn't it was 
+really tough handling all the problems with assembly and my best advice is to not touch assembly, because it is very hard 
+but if you do learn assembly and do a big project then it is very rewarding. Doing this project got me to know how the
+computer works and how just a tiny imperfection can make everything collapse.
