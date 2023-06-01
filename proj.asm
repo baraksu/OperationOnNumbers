@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 ; version 1.04
-=======
-; version 104
->>>>>>> 30a8c333d27d71828dbe338b7bbcd1cdacf7856b
-=======
-; version 104
->>>>>>> 30a8c333d27d71828dbe338b7bbcd1cdacf7856b
 .MODEL small
 .STACK 100h
 .DATA        
@@ -41,15 +33,7 @@ remainder dw 0,'$' ;used as a place  to store the remainder when calculating the
 quotient dw 0,'$'  ;used as a place  to store the quotient when calculating the avg  
 sum db 0 ;used to store the sum of numbers in array
 .CODE 
-<<<<<<< HEAD
-<<<<<<< HEAD
 start:            ;this is the start of the code
-=======
-start:   
->>>>>>> 30a8c333d27d71828dbe338b7bbcd1cdacf7856b
-=======
-start:   
->>>>>>> 30a8c333d27d71828dbe338b7bbcd1cdacf7856b
         mov ax,@data
         mov ds,ax    
     
@@ -478,8 +462,6 @@ not_minus:
         
 endp ScanNum
   
-<<<<<<< HEAD
-<<<<<<< HEAD
 print_ax proc   ; this procedure prints ax from hex to dec
         cmp ax, 0
         jne print_ax_r
@@ -506,38 +488,5 @@ print_ax_r:
         popa  
         ret  
         endp print_ax
-=======
-=======
->>>>>>> 30a8c333d27d71828dbe338b7bbcd1cdacf7856b
-print_ax proc
-cmp ax, 0
-jne print_ax_r
-    push ax
-    mov al, '0'
-    mov ah, 0eh
-    int 10h
-    pop ax
-    ret 
-print_ax_r:
-    pusha
-    mov dx, 0
-    cmp ax, 0
-    je pn_done
-    mov bx, 10
-    div bx    
-    call print_ax_r
-    mov ax, dx
-    add al, 30h
-    mov ah, 0eh
-    int 10h    
-    jmp pn_done
-pn_done:
-    popa  
-    ret  
-endp print_ax
-<<<<<<< HEAD
->>>>>>> 30a8c333d27d71828dbe338b7bbcd1cdacf7856b
-=======
->>>>>>> 30a8c333d27d71828dbe338b7bbcd1cdacf7856b
 
 END start
