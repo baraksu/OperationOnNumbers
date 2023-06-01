@@ -1,4 +1,4 @@
-; version 1.04
+; version 1.05
 .MODEL small
 .STACK 100h
 .DATA        
