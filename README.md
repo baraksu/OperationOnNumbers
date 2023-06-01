@@ -104,10 +104,11 @@ the variables are:\
 * `remainder` - this is the variable that stores the remainder of the average of all the numbers in the array.
 * `msg3` - this is the variable that stores the entire menu of the program.
 ## Possible future features
-i would like to add new operations to the program in the future, like a procedure that will print the array, or 
+I would like to add new operations to the program in the future, like a procedure that will print the array, or maybe a procedure that will\
+make you guess what number from the arrayit chooses based on the first digit of the number.
 
 ## Personal experience
 It was very challenging to work on this project, if I thought I knew assembly before this project then I didn't it was 
-really tough handling all the problems with assembly and my best advice is to not touch assembly, because it is very hard 
+really tough handling all the problems with assembly and my best advice is to not touch assembly because it is very hard 
 but if you do learn assembly and do a big project then it is very rewarding. Doing this project got me to know how the
-computer works and how just a tiny imperfection can make everything collapse. Before doing this project i hated assembley, and now i only dislike it.
+computer works and how just a tiny imperfection can make everything collapse. Before doing this project I hated assembly, and now I only dislike it.
