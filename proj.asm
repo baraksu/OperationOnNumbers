@@ -1,4 +1,4 @@
-; version 1.05
+; version 1.06 ; title before entering number, each number- Enter number (index)
 .MODEL small
 .STACK 100h
 .DATA        
@@ -98,9 +98,10 @@ press4:
         call GetArrAvg
         jmp startOfMenu  
         
-press5:
-         
-        jmp startOfMenu
+press5:  
+        call PrintArray
+        jmp startOfMenu 
+        
         
 press6:   
         popa
@@ -117,7 +118,7 @@ proc GetArrAvg
         mov cx,counter
         xor bx,bx       
         xor ax,ax
-        l1:
+l1:
         add ax,array[bx]       
         inc bx
         inc bx
@@ -129,12 +130,12 @@ proc GetArrAvg
         mov b.quotient,al  
         jmp endAvg
         
-        bigAvg: 
+bigAvg: 
         div counter
         mov remainder,dx
         mov quotient,ax
                              
-        endAvg:
+endAvg:
                 
         mov ah,09h
         lea dx,msg81
