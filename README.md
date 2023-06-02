@@ -9,6 +9,7 @@
 * [What does the program do?](#what-does-the-program-do?)
 * [Running examples](#running-examples)
 * [Developing Process](#developing-process)
+* [Input process](#input-process)
 * [Possible future features](#possible-future-features)
 * [Personal experience](#personal-experience)
 # What does the program do?
@@ -74,7 +75,7 @@ to make life easier I split the code into different parts, procedures.
 * `print_ax` - A procedure that prints the hexadecimal value in ax in decimal form.
  
 I planned how the general code of each procedure should be yet still because assembly is the worst coding language in the world I still had problems.
-## Input
+# Input process
 I will explain more about the most difficult part of this program, the input, and the part about it of\
 my journey with it.\
 \
