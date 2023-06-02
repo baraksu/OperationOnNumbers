@@ -5,6 +5,8 @@
 **Grade**: 10b\
 **School**: Yeshivat Bnei Akiva - Givat Shmuel\
 **Year**: 2023
+## Table of contentc
+* [What does the program do?](#what-does-the-program-do?)
 # What does the program do?
 The program has a menu then it asks to do 1 of 5 functions:
 ### 1.
