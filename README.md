@@ -7,6 +7,10 @@
 **Year**: 2023
 ## Table of contentc
 * [What does the program do?](#what-does-the-program-do?)
+* [Running examples](#running-examples)
+* [Developing Process](#developing-process)
+* [Possible future features](#possible-future-features)
+* [Personal experience](#personal-experience)
 # What does the program do?
 The program has a menu then it asks to do 1 of 5 functions:
 ### 1.
@@ -105,11 +109,11 @@ the variables are:\
 * `quotient` - this is the variable that stores the quotient of the average of all the numbers in the array.
 * `remainder` - this is the variable that stores the remainder of the average of all the numbers in the array.
 * `msg3` - this is the variable that stores the entire menu of the program.
-## Possible future features
+# Possible future features
 I would like to add new operations to the program in the future, like a procedure that will print the array, or maybe a procedure that will\
 make you guess what number from the arrayit chooses based on the first digit of the number.
 
-## Personal experience
+# Personal experience
 It was very challenging to work on this project, if I thought I knew assembly before this project then I didn't it was 
 really tough handling all the problems with assembly and my best advice is to not touch assembly because it is very hard 
 but if you do learn assembly and do a big project then it is very rewarding. Doing this project got me to know how the
