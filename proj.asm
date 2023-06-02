@@ -1,4 +1,4 @@
-; version 1.07
+; version 1.08
 .MODEL small
 .STACK 100h
 .DATA        
@@ -11,14 +11,14 @@ crlf db 13,10,'$',13,10  ;this variable is used to go down lines
 make_minus db ? ; used as a flag.
 ten dw 10 ; used as multiplier. 
 msg3 db 13,10,"_______________________________________________________",13,10     ;this is the menu msg
-     db       "³ This program does the following:                    ³",13,10         
-     db       "³                                                     ³",13,10
-     db       "³ To insert the numbers press: 1                      ³",13,10
-     db       "³ To get the lowest number press: 2                   ³",13,10
-     db       "³ To get the highest number press: 3                  ³",13,10           
-     db       "³ To calculate the average of all the numbers press: 4³",13,10
-     db       "³ To end program press: 5                             ³",13,10
-     db       "³_____________________________________________________³",13,10 
+     db       "Â³ This program does the following:                    Â³",13,10         
+     db       "Â³                                                     Â³",13,10
+     db       "Â³ To insert the numbers press: 1                      Â³",13,10
+     db       "Â³ To get the lowest number press: 2                   Â³",13,10
+     db       "Â³ To get the highest number press: 3                  Â³",13,10           
+     db       "Â³ To calculate the average of all the numbers press: 4Â³",13,10
+     db       "Â³ To end program press: 5                             Â³",13,10
+     db       "Â³_____________________________________________________Â³",13,10 
      db       13,10,'$'
 msg4 db 13,10,'Error in input enter again: ',13,10,'$'  ;if there is an error in input this msg will display
 msg5 db 13,10,'Lowest number: ','$'  ;msg to show lowest number
@@ -31,12 +31,29 @@ msg82 db ' with remainder: ','$'
 remainder dw 0,'$' ;used as a place  to store the remainder when calculating the avg
 quotient dw 0,'$'  ;used as a place  to store the quotient when calculating the avg  
 msg91 db 13,10,' ','$';msg that shows before entering number for array
-msg92 db ' Numbers left for array',13,10,'$' ;second part of msg9
+msg92 db ' Numbers left for array',13,10,'$' ;second part of msg9  
+msg10 db 13,10,'                             _   _     ',13,10         
+      db       '                            | | (_)    ',13,10         
+      db       '   ___  _ __   ___ _ __ __ _| |_ _  ___  _ __          ',13,10         
+      db       '  / _ \|  _ \ / _ \  __/ _` | __| |/ _ \|  _ \',13,10           
+      db       ' | (_) | |_) |  __/ | | (_| | |_| | (_) | | | |',13,10          
+      db       '  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|',13,10          
+      db       '       | |  ',13,10                                               
+      db       '   ___ |_|__    ',13,10                                             
+      db       '  / _ \|  _ \           _',13,10                                
+      db       ' | (_) | | | |         | |',13,10                               
+      db       '  \___/|_| |_|_ __ ___ | |__   ___ _ __ ___  ',13,10            
+      db       ' |  _ \| | | |  _ ` _ \|  _ \ / _ \  __/ __|',13,10             
+      db       ' | | | | |_| | | | | | | |_) |  __/ |  \__ \',13,10             
+      db       ' |_| |_|\__,_|_| |_| |_|_.__/ \___|_|  |___/      ','$',13,10           
+       
 .CODE 
 start:            ;this is the start of the code
         mov ax,@data
         mov ds,ax    
-        
+        mov ah,09h
+        lea dx,msg10 
+        int 21h  
         call SetArray
         call Menu ; this command calls the menu which is basically the program
    
@@ -45,10 +62,15 @@ exit:
         int 21h       
 
 proc HighestNum ; a procedure that prints that highest number  ;does not get anything and does not return anything
-        pusha
+        push bp
         mov bp,sp
+        push ax
+        push bx
+        push cx
+        push dx
+        push si
      
-        mov cx,counter
+        mov cx,[bp+4]
         xor si,si
         xor bx,bx
         
@@ -79,7 +101,12 @@ loop checkHighestNum
          
         call print_ax
                              
-        popa 
+        pop si
+        pop dx
+        pop cx
+        pop bx
+        pop ax
+        pop bp 
         ret 
 endp HighestNum 
 
@@ -124,8 +151,10 @@ press1:
 press2: 
         call LowestNum
         jmp startOfMenu         
-press3:          
-        call HighestNum 
+press3:   
+        push counter       
+        call HighestNum
+        pop counter 
         jmp startOfMenu 
         
 press4:
